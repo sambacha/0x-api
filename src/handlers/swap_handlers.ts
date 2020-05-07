@@ -59,8 +59,9 @@ export class SwapHandlers {
         const quote = await this._calculateSwapQuoteAsync(params);
         const { price, value, gasPrice, gas, protocolFee, buyAmount, sellAmount, sources, orders } = quote;
         logger.info({
-            indicativeQuoteServed: {
-                taker: params.takerAddress,
+            swapPriceServed: {
+                requestTaker: params.takerAddress,
+                responseTakers: orders.map(o => o.takerAddress),
                 apiKey: params.apiKey,
                 buyToken: params.buyToken,
                 sellToken: params.sellToken,
