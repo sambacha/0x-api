@@ -7,8 +7,16 @@ import { BigNumber } from '@0x/utils';
 import { Web3Wrapper } from '@0x/web3-wrapper';
 import * as _ from 'lodash';
 
-import { ASSET_SWAPPER_MARKET_ORDERS_OPTS, CHAIN_ID, LIQUIDITY_POOL_REGISTRY_ADDRESS } from '../config';
+import {
+    ASSET_SWAPPER_MARKET_ORDERS_OPTS,
+    CHAIN_ID,
+    LIQUIDITY_POOL_REGISTRY_ADDRESS,
+    RFQT_API_KEY_WHITELIST,
+    RFQT_MAKER_ASSET_OFFERINGS,
+    RFQT_SKIP_BUY_REQUESTS,
+} from '../config';
 import { ONE_GWEI, ONE_SECOND_MS, QUOTE_ORDER_EXPIRATION_BUFFER_MS, TEN_MINUTES_MS } from '../constants';
+import { logger } from '../logger';
 import {
     CalculateMetaTransactionPriceResponse,
     CalculateMetaTransactionQuoteParams,
@@ -29,6 +37,13 @@ export class MetaTransactionService {
             chainId: CHAIN_ID,
             expiryBufferMs: QUOTE_ORDER_EXPIRATION_BUFFER_MS,
             liquidityProviderRegistryAddress: LIQUIDITY_POOL_REGISTRY_ADDRESS,
+            rfqt: {
+                takerApiKeyWhitelist: RFQT_API_KEY_WHITELIST,
+                makerAssetOfferings: RFQT_MAKER_ASSET_OFFERINGS,
+                skipBuyRequests: RFQT_SKIP_BUY_REQUESTS,
+                warningLogger: logger.warn.bind(logger),
+                infoLogger: logger.info.bind(logger),
+            },
         };
         this._swapQuoter = new SwapQuoter(this._provider, orderbook, swapQuoterOpts);
         this._contractWrappers = new ContractWrappers(this._provider, { chainId: CHAIN_ID });
